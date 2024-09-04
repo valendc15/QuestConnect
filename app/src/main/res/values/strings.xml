@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">QuestConnect</string>
+    <string name="ok" >OK</string>
+    <string name="menu_icon_descriptor">Menu Icon</string>
+    <string name="menu_item_one">Menu item one</string>
+    <string name= "menu_item_two">Menu item two</string>
+    <string name= "close_icon_descriptor">Close icon</string>
+</resources>
