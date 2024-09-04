@@ -71,5 +71,7 @@ dependencies {
     implementation(libs.androidx.navigation)
     implementation(libs.hilt.navigation)
     implementation(libs.dagger.hilt)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter)
     kapt(libs.hilt.compiler)
 }
