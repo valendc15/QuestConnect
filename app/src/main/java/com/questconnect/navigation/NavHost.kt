@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.questconnect.Home
+import com.questconnect.games.Games
 
 @Composable
 fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostController) {
@@ -19,10 +20,12 @@ fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostControl
         modifier = Modifier
             .fillMaxSize()
             .padding(innerPadding)
-            .padding(horizontal = 10.dp)
     ) {
         composable(route = QuestConnectScreen.Home.name) {
             Home()
+        }
+        composable(route = QuestConnectScreen.Games.name ) {
+            Games()
         }
     }
 }

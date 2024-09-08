@@ -47,7 +47,7 @@ fun BottomBar(
         unselectedIcon = Icons.Outlined.Create
     )
     val moreTab = TabBarItem(
-        title = QuestConnectScreen.Library.name,
+        title = QuestConnectScreen.Games.name,
         selectedIcon = Icons.Filled.List,
         unselectedIcon = Icons.Outlined.List
     )

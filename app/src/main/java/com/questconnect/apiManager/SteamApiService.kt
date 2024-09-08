@@ -2,7 +2,7 @@ package com.questconnect.apiManager
 import com.questconnect.games.GameResponse
 import retrofit.Call
 import retrofit.http.GET
-import retrofit2.http.Query
+import retrofit.http.Query
 
 interface SteamApiService {
 

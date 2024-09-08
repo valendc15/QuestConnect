@@ -22,8 +22,10 @@ import com.questconnect.navigation.DrawerContent
 import com.questconnect.navigation.NavHostComposable
 import com.questconnect.navigation.TopBar
 import com.questconnect.ui.theme.QuestConnectTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

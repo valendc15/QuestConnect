@@ -9,4 +9,6 @@
     <string name="steam_api_key">dummy</string>
     <string name="steam_user_id">76561198328603557</string>
     <string name= "json">json</string>
+    <string name= "retry">Retry</string>
+    <string name= "retry_games">An error occurred while fetching your games, please retry </string>
 </resources>

@@ -73,5 +73,6 @@ dependencies {
     implementation(libs.dagger.hilt)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
+    implementation(libs.coil)
     kapt(libs.hilt.compiler)
 }

@@ -1,10 +1,9 @@
-package com.example.unscramble.ranking
+package com.questconnect.games
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.questconnect.apiManager.SteamApiServiceImpl
-import com.questconnect.games.Game
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,29 +12,29 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RankingViewModel @Inject constructor(
+class GamesViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val apiServiceImpl: SteamApiServiceImpl,
 ): ViewModel() {
 
     private val _loadingGames = MutableStateFlow(false)
-    val loadingRanking = _loadingGames.asStateFlow()
+    val loadingGames = _loadingGames.asStateFlow()
 
     private val _games = MutableStateFlow(listOf<Game>())
-    val ranking = _games.asStateFlow()
+    val games = _games.asStateFlow()
 
     private val _showRetry = MutableStateFlow(false)
     val showRetry = _showRetry.asStateFlow()
 
     init {
-        loadRanking()
+        loadGames()
     }
 
-    fun retryLoadingRanking() {
-        loadRanking()
+    fun retryLoadingGames() {
+        loadGames()
     }
 
-    private fun loadRanking() {
+    private fun loadGames() {
         _loadingGames.value = true
         apiServiceImpl.getOwnedGames(
             context = context,
