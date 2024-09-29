@@ -18,6 +18,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -153,7 +154,7 @@ fun GameView(game: Game) {
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Playtime: ${game.playtime_forever / 60} hrs",
+                            text = stringResource(id = R.string.total_playtime, (game.playtime_forever / 60).toString()),
                             color = Color.LightGray,
                             fontSize = mediumSmallText
                         )

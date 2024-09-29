@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.questconnect.R
 import com.questconnect.games.GameResponse
+import com.questconnect.home.SteamIdResponse
 import retrofit.Call
 import retrofit.Callback
 import retrofit.GsonConverterFactory
@@ -20,9 +21,9 @@ class SteamApiServiceImpl @Inject constructor() {
         context: Context,
         onSuccess: (GameResponse) -> Unit,
         onFail: () -> Unit,
-        loadingFinished: () -> Unit
+        loadingFinished: () -> Unit,
+        steamId: String
     ) {
-        Log.d(TAG, "Creating Retrofit instance")
 
         val retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(context.getString(R.string.steam_api_url))
@@ -30,33 +31,70 @@ class SteamApiServiceImpl @Inject constructor() {
             .build()
 
         val service: SteamApiService = retrofit.create(SteamApiService::class.java)
-
-        Log.d(TAG, "Preparing API call")
+        println("Este es el steamId: " + steamId)
 
         val call: Call<GameResponse> = service.getOwnedGames(
             apiKey = context.getString(R.string.steam_api_key),
-            steamId = context.getString(R.string.steam_user_id)
+            steamId = steamId
         )
-
-        Log.d(TAG, "Executing API call")
 
         call.enqueue(object : Callback<GameResponse> {
             override fun onResponse(response: Response<GameResponse>?, retrofit: Retrofit?) {
-                Log.d(TAG, "API call response received")
 
                 loadingFinished()
                 if (response?.isSuccess == true && response.body() != null) {
-                    Log.d(TAG, "API call successful: ${response.body()}")
                     onSuccess(response.body()!!)
                 } else {
-                    Log.e(TAG, "API call failed: ${response?.errorBody()?.string()}")
-                    onFail()
+                    onFailure(Exception("Bad Request"))
                 }
             }
 
             override fun onFailure(t: Throwable?) {
                 Log.e(TAG, "API call failed", t)
                 Toast.makeText(context, "Can't get owned games: ${t?.message}", Toast.LENGTH_SHORT).show()
+                onFail()
+                loadingFinished()
+            }
+        })
+    }
+
+    fun getSteamId(
+        context: Context,
+        username: String,
+        onSuccess: (String) -> Unit,
+        onFail: () -> Unit,
+        loadingFinished: () -> Unit
+    ) {
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(context.getString(R.string.steam_api_url))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service: SteamApiService = retrofit.create(SteamApiService::class.java)
+
+        val call: Call<SteamIdResponse> = service.getSteamIdFromVanityUrl(
+            apiKey = context.getString(R.string.steam_api_key),
+            username = username
+        )
+
+        call.enqueue(object : Callback<SteamIdResponse> {
+            override fun onResponse(response: Response<SteamIdResponse>?, retrofit: Retrofit?) {
+                loadingFinished()
+                if (response?.isSuccess == true && response.body() != null && response.body()?.response?.success == 1) {
+                    val steamId = response.body()?.response?.steamid
+                    if (steamId != null) {
+                        onSuccess(steamId)
+                    } else {
+                        onFailure(Exception("Steam ID not found"))
+                    }
+                } else {
+                    onFailure(Exception("Failed to resolve Steam ID"))
+                }
+            }
+
+            override fun onFailure(t: Throwable?) {
+                Log.e(TAG, "API call failed", t)
+                Toast.makeText(context, "Can't resolve Steam ID: ${t?.message}", Toast.LENGTH_SHORT).show()
                 onFail()
                 loadingFinished()
             }

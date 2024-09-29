@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.questconnect.apiManager.SteamApiServiceImpl
+import com.questconnect.data.PreferencesKeys
+import com.questconnect.data.getFromDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,7 @@ import javax.inject.Inject
 class GamesViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val apiServiceImpl: SteamApiServiceImpl,
-): ViewModel() {
+) : ViewModel() {
 
     private val _loadingGames = MutableStateFlow(false)
     val loadingGames = _loadingGames.asStateFlow()
@@ -26,8 +28,19 @@ class GamesViewModel @Inject constructor(
     private val _showRetry = MutableStateFlow(false)
     val showRetry = _showRetry.asStateFlow()
 
+    private var steamId: String = ""
+
     init {
-        loadGames()
+        loadSteamIdAndGames()
+    }
+
+    private fun loadSteamIdAndGames() {
+        viewModelScope.launch {
+            getFromDataStore(context, PreferencesKeys.STEAM_USER_ID_KEY).collect { id ->
+                steamId = id ?: ""
+                loadGames()
+            }
+        }
     }
 
     fun retryLoadingGames() {
@@ -38,6 +51,7 @@ class GamesViewModel @Inject constructor(
         _loadingGames.value = true
         apiServiceImpl.getOwnedGames(
             context = context,
+            steamId = steamId,
             onSuccess = {
                 viewModelScope.launch {
                     _games.emit(it.response.games.sortedByDescending { it.name })
