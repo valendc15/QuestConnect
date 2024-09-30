@@ -1,4 +1,5 @@
 package com.questconnect.apiManager
+import com.questconnect.favorites.NewsResponse
 import com.questconnect.games.GameResponse
 import com.questconnect.home.SteamIdResponse
 import retrofit.Call
@@ -20,4 +21,11 @@ interface SteamApiService {
             @Query("vanityurl") username: String
         ): Call<SteamIdResponse>
 
+    @GET("ISteamNews/GetNewsForApp/v0002/")
+    fun getNewsForApp(
+        @Query("appid") appId: Long,
+        @Query("count") count: Int = 3,
+        @Query("maxlength") maxLength: Int = 300,
+        @Query("format") format: String = "json"
+    ): Call<NewsResponse>
 }

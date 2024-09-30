@@ -12,6 +12,7 @@ import com.questconnect.data.getFromDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -35,45 +36,53 @@ class GamesViewModel @Inject constructor(
 
     private val questConnectDatabase = QuestConnectDatabase.getDatabase(context)
 
-
     private val faveGamesFlow = questConnectDatabase.favoriteDao().getAllFavoriteGames().asFlow()
     val favoriteGameIds = MutableStateFlow<Set<Long>>(emptySet())
+
+    private val _snackbarMessage = MutableStateFlow<String?>(null)
+    val snackbarMessage = _snackbarMessage.asStateFlow()
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    fun clearSnackbar() {
+        _snackbarMessage.value = null
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        _searchQuery.value = query
+    }
 
     init {
         loadSteamIdAndGames()
         observeFavoriteGames()
     }
 
-
     private fun loadSteamIdAndGames() {
         viewModelScope.launch {
             getFromDataStore(context, PreferencesKeys.STEAM_USER_ID_KEY).collect { id ->
                 steamId = id ?: ""
-                println("Steam ID Loaded: $steamId")
                 loadGames()
             }
         }
     }
 
-
     private fun observeFavoriteGames() {
         viewModelScope.launch {
-            faveGamesFlow.collect { favorites ->
-                println("Favorites Loaded: ${favorites.map { it.appId }}")
+            getFromDataStore(context, PreferencesKeys.STEAM_USER_ID_KEY).collect { id ->
+                faveGamesFlow.collect { favorites ->
+                    val filteredFavorites = favorites.filter { it.userId.toString() == id}
 
+                    favoriteGameIds.value = if (filteredFavorites.isEmpty()) {
+                        emptySet()
+                    } else {
+                        filteredFavorites.map { it.appId }.toSet()
+                    }
 
-                favoriteGameIds.value = if (favorites.isEmpty()) {
-                    emptySet()
-                } else {
-                    favorites.map { it.appId }.toSet()
+                    _games.value = _games.value.map { game ->
+                        game.copy(isFavorite = favoriteGameIds.value.contains(game.appid.toLong()))
+                    }
                 }
-
-
-                _games.value = _games.value.map { game ->
-                    game.copy(isFavorite = favoriteGameIds.value.contains(game.appid.toLong()))
-                }
-
-                println("Updated Games List after observing favorites: ${_games.value.map { it.appid to it.isFavorite }}")
             }
         }
     }
@@ -93,13 +102,10 @@ class GamesViewModel @Inject constructor(
 
                     val updatedGamesList = gamesList.map { game ->
                         val isFavorite = favoriteGameIds.value.contains(game.appid.toLong())
-                        println("Game: ${game.name}, isFavorite: $isFavorite")
                         game.copy(isFavorite = isFavorite)
                     }
 
                     _games.emit(updatedGamesList)
-
-                    println("Games List after API fetch: ${_games.value.map { it.appid to it.isFavorite }}")
                 }
                 _showRetry.value = false
             },
@@ -111,22 +117,19 @@ class GamesViewModel @Inject constructor(
             }
         )
     }
+
     fun toggleFavoriteGame(game: Game) {
         viewModelScope.launch {
             try {
                 if (game.isFavorite) {
-                    val rowsDeleted = questConnectDatabase.favoriteDao().deleteFavoriteById(game.appid.toLong())
-                    if (rowsDeleted > 0) {
-                        println("Successfully deleted game with appid: ${game.appid}")
-                    } else {
-                        println("Failed to delete game with appid: ${game.appid}")
-                    }
+                    questConnectDatabase.favoriteDao().deleteFavoriteByIdAndType(game.appid.toLong(), "SteamGames", steamId.toLong())
+                    _snackbarMessage.value = "Removed game from favorites"
                 } else {
-                    questConnectDatabase.favoriteDao().insertFavorite(Favorite(appId = game.appid.toLong(), typeName = "SteamGames"))
+                    questConnectDatabase.favoriteDao().insertFavorite(Favorite(appId = game.appid.toLong(), typeName = "SteamGames", userId = steamId.toLong()))
+                    _snackbarMessage.value = "Added game to favorites"
                 }
 
                 val updatedGame = game.copy(isFavorite = !game.isFavorite)
-
                 _games.value = _games.value.map {
                     if (it.appid == updatedGame.appid) {
                         updatedGame

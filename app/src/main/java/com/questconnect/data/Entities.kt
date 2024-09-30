@@ -9,4 +9,5 @@ data class Favorite(
     val id: Long = 0,
     val appId: Long,
     val typeName: String,
+    val userId: Long,
 )

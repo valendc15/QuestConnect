@@ -45,37 +45,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val drawerState = rememberDrawerState(DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
 
-                    ModalNavigationDrawer(
-                        drawerContent = {
-                            DrawerContent { route ->
-                                scope.launch {
-                                    drawerState.close()
-                                }
-                                navController.navigate(route)
-                            }
-                        },
-                        drawerState = drawerState
-                    ) {
                         Scaffold(
-                            topBar = {
-                                TopBar(
-                                    onMenuClick = {
-                                        scope.launch {
-                                            drawerState.open()
-                                        }
-                                    }
-                                )
-                            },
                             bottomBar = {
                                 BottomBar { navController.navigate(it) }
                             }
                         ) { innerPadding ->
                             NavHostComposable(innerPadding, navController)
                         }
-                    }
+
                 }
             }
         }

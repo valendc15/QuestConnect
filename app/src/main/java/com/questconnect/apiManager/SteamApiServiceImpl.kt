@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.questconnect.R
+import com.questconnect.favorites.NewsResponse
 import com.questconnect.games.GameResponse
 import com.questconnect.home.SteamIdResponse
 import retrofit.Call
@@ -95,6 +96,40 @@ class SteamApiServiceImpl @Inject constructor() {
             override fun onFailure(t: Throwable?) {
                 Log.e(TAG, "API call failed", t)
                 Toast.makeText(context, "Can't resolve Steam ID: ${t?.message}", Toast.LENGTH_SHORT).show()
+                onFail()
+                loadingFinished()
+            }
+        })
+    }
+    fun getNewsForGame(
+        context: Context,
+        appId: Long,
+        onSuccess: (NewsResponse) -> Unit,
+        onFail: () -> Unit,
+        loadingFinished: () -> Unit
+    ) {
+        val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(context.getString(R.string.steam_api_url))
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service: SteamApiService = retrofit.create(SteamApiService::class.java)
+
+        val call: Call<NewsResponse> = service.getNewsForApp(appId)
+
+        call.enqueue(object : Callback<NewsResponse> {
+            override fun onResponse(response: Response<NewsResponse>?, retrofit: Retrofit?) {
+                loadingFinished()
+                if (response?.isSuccess == true && response.body() != null) {
+                    onSuccess(response.body()!!)
+                } else {
+                    onFailure(Exception("Failed to fetch news"))
+                }
+            }
+
+            override fun onFailure(t: Throwable?) {
+                Log.e(TAG, "API call failed", t)
+                Toast.makeText(context, "Can't get news: ${t?.message}", Toast.LENGTH_SHORT).show()
                 onFail()
                 loadingFinished()
             }

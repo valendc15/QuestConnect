@@ -14,6 +14,8 @@
     <string name= "retry_games">An error occurred while fetching your games, please retry </string>
     <string name="login">Login</string>
     <string name="steam_username">Steam Username</string>
-    <string name="total_playtime">Playtime $1%s hrs</string>
+    <string name="total_playtime">Playtime 1%s hrs</string>
+    <string name="search_games">Search Steam Games</string>
+    <string name="no_games_found">No games found</string>
 
 </resources>

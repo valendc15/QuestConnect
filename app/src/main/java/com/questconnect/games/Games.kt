@@ -13,14 +13,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -48,56 +47,124 @@ import com.questconnect.ui.theme.largeText
 import com.questconnect.ui.theme.mediumSmallText
 import com.questconnect.ui.theme.mediumText
 
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Games() {
     val viewModel = hiltViewModel<GamesViewModel>()
     val games = viewModel.games.collectAsState()
     val loadingGames = viewModel.loadingGames.collectAsState()
     val showRetry = viewModel.showRetry.collectAsState()
+    val snackbarMessage by viewModel.snackbarMessage.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    val searchQuery = viewModel.searchQuery.collectAsState()
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(SteamBlue)
-            .padding(8.dp)
-    ) {
-        if (loadingGames.value) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                LinearProgressIndicator(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .align(Alignment.Center),
-                    color = SteamLightBlue,
-                    trackColor = SteamBlue
-                )
+    LaunchedEffect(snackbarMessage) {
+        snackbarMessage?.let {
+            coroutineScope.launch {
+                snackbarHostState.showSnackbar(it)
+                viewModel.clearSnackbar()
             }
-        } else if (showRetry.value) {
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
-                horizontalAlignment = Alignment.CenterHorizontally
+        }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(SteamBlue)
+                .padding(8.dp)
+        ) {
+            SearchBar(
+                query = searchQuery.value,
+                onQueryChange = { viewModel.onSearchQueryChanged(it) },
+                onSearch = {},
+                active = false,
+                onActiveChange = { /* Handle active change */ },
+                placeholder = { Text("Search for games") },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                },
+                modifier = Modifier
+                    .fillMaxWidth().padding(bottom = 18.dp),
+                content = {}
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(SteamBlue)
             ) {
-                Text(
-                    text = stringResource(id = R.string.retry),
-                    fontSize = largeText,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-                Text(
-                    text = stringResource(id = R.string.retry_games),
-                    color = Color.White
-                )
-                Button(onClick = { viewModel.retryLoadingGames() }) {
-                    Text(text = stringResource(id = R.string.retry))
-                }
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 150.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(games.value) { game: Game ->
-                    GameView(game = game, viewModel= viewModel)
+                when {
+                    loadingGames.value -> {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            LinearProgressIndicator(
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .align(Alignment.Center),
+                                color = SteamLightBlue,
+                                trackColor = SteamBlue
+                            )
+                        }
+                    }
+                    showRetry.value -> {
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(id = R.string.retry),
+                                fontSize = largeText,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                            Text(
+                                text = stringResource(id = R.string.retry_games),
+                                color = Color.White
+                            )
+                            Button(onClick = { viewModel.retryLoadingGames() }) {
+                                Text(text = stringResource(id = R.string.retry))
+                            }
+                        }
+                    }
+                    else -> {
+                        val filteredGames = games.value.filter {
+                            it.name.contains(searchQuery.value, ignoreCase = true)
+                        }
+
+                        if (filteredGames.isEmpty()) {
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = stringResource(id = R.string.no_games_found),
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = largeText
+                                )
+                            }
+                        } else {
+                            LazyVerticalGrid(
+                                columns = GridCells.Adaptive(minSize = 150.dp),
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                items(filteredGames) { game: Game ->
+                                    GameView(game = game, viewModel = viewModel)
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -18,9 +18,9 @@ interface FavoriteDao {
 
     @Query("""
     DELETE FROM favorites 
-    WHERE appId = :appId
+    WHERE appId = :appId and typeName = :typeName and userId = :userId
 """)
-    suspend fun deleteFavoriteById(appId: Long): Int
+    suspend fun deleteFavoriteByIdAndType(appId: Long, typeName: String, userId: Long): Int
 
     @Query("SELECT * FROM favorites")
     fun getAllFavorites(): LiveData<List<Favorite>>
@@ -28,9 +28,9 @@ interface FavoriteDao {
     @Query("""
     SELECT f.* 
     FROM favorites f
-    WHERE f.appId = :appId AND f.typeName = :typeName
+    WHERE f.appId = :appId AND f.typeName = :typeName and f.userId = :userId
 """)
-    fun getFavoritesByIdAndType(appId: Long, typeName: String): LiveData<Favorite>
+    fun getFavoritesByIdAndTypeAndUserId(appId: Long, typeName: String, userId: Long): LiveData<Favorite>
 
     @Query("""
         SELECT f.* 
