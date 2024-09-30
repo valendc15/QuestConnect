@@ -13,5 +13,6 @@ data class Game(
     val appid: Int,
     val name: String,
     val playtime_forever: Int,
-    val img_icon_url: String
+    val img_icon_url: String,
+    var isFavorite: Boolean = false
 )

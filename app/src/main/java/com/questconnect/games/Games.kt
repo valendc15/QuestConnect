@@ -12,13 +12,16 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -91,7 +94,7 @@ fun Games() {
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(games.value) { game: Game ->
-                    GameView(game = game)
+                    GameView(game = game, viewModel= viewModel)
                 }
             }
         }
@@ -99,8 +102,11 @@ fun Games() {
 }
 
 @Composable
-fun GameView(game: Game) {
+fun GameView(game: Game, viewModel: GamesViewModel) {
+    val favoriteGameIds by viewModel.favoriteGameIds.collectAsState()
     var isExpanded by remember { mutableStateOf(false) }
+
+    val isFav = favoriteGameIds.contains(game.appid.toLong())
 
     Card(
         modifier = Modifier
@@ -128,6 +134,18 @@ fun GameView(game: Game) {
                 contentDescription = game.name,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
+            )
+
+            Icon(
+                imageVector = if (isFav) Icons.Filled.Favorite else Icons.Outlined.Favorite,
+                contentDescription = "Favorite",
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(8.dp)
+                    .clickable {
+                        viewModel.toggleFavoriteGame(game)
+                    },
+                tint = Color.Red
             )
 
             androidx.compose.animation.AnimatedVisibility(

@@ -17,18 +17,28 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.questconnect.data.ContentTypes
+import com.questconnect.data.QuestConnectDatabase
 import com.questconnect.navigation.BottomBar
 import com.questconnect.navigation.DrawerContent
 import com.questconnect.navigation.NavHostComposable
 import com.questconnect.navigation.TopBar
 import com.questconnect.ui.theme.QuestConnectTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var questConnectDatabase: QuestConnectDatabase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        addDefaultContentTypes()
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
@@ -72,21 +82,13 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    QuestConnectTheme {
-        Greeting("Android")
+    private fun addDefaultContentTypes() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val contentTypeExists = questConnectDatabase.contentTypesDao().getContentTypeByName("SteamGames") != null
+            if (!contentTypeExists) {
+                questConnectDatabase.contentTypesDao().insert(ContentTypes(0, "SteamGames"))
+            }
+        }
     }
 }
+
