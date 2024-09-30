@@ -17,7 +17,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
-import com.questconnect.data.ContentTypes
 import com.questconnect.data.QuestConnectDatabase
 import com.questconnect.navigation.BottomBar
 import com.questconnect.navigation.DrawerContent
@@ -38,7 +37,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addDefaultContentTypes()
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
@@ -79,14 +77,6 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 }
-            }
-        }
-    }
-    private fun addDefaultContentTypes() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val contentTypeExists = questConnectDatabase.contentTypesDao().getContentTypeByName("SteamGames") != null
-            if (!contentTypeExists) {
-                questConnectDatabase.contentTypesDao().insert(ContentTypes(0, "SteamGames"))
             }
         }
     }

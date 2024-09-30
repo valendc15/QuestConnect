@@ -13,8 +13,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -137,7 +140,7 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
             )
 
             Icon(
-                imageVector = if (isFav) Icons.Filled.Favorite else Icons.Outlined.Favorite,
+                imageVector = if (isFav) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                 contentDescription = "Favorite",
                 modifier = Modifier
                     .align(Alignment.TopEnd)

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.asFlow
 import com.questconnect.apiManager.SteamApiServiceImpl
+import com.questconnect.data.Favorite
 import com.questconnect.data.PreferencesKeys
 import com.questconnect.data.QuestConnectDatabase
 import com.questconnect.data.getFromDataStore
@@ -114,19 +115,14 @@ class GamesViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 if (game.isFavorite) {
-                    val rowsDeleted = questConnectDatabase.favoriteDao().deleteFavoriteByTypeName(game.appid.toLong(), "SteamGames")
+                    val rowsDeleted = questConnectDatabase.favoriteDao().deleteFavoriteById(game.appid.toLong())
                     if (rowsDeleted > 0) {
                         println("Successfully deleted game with appid: ${game.appid}")
                     } else {
                         println("Failed to delete game with appid: ${game.appid}")
                     }
                 } else {
-                    val rowId = questConnectDatabase.favoriteDao().insertFavoriteByTypeName(game.appid.toLong(), "SteamGames")
-                    if (rowId > 0) {
-                        println("Successfully inserted favorite game with appid: ${game.appid}")
-                    } else {
-                        println("Failed to insert favorite game with appid: ${game.appid}")
-                    }
+                    questConnectDatabase.favoriteDao().insertFavorite(Favorite(appId = game.appid.toLong(), typeName = "SteamGames"))
                 }
 
                 val updatedGame = game.copy(isFavorite = !game.isFavorite)
