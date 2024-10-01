@@ -14,6 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -29,8 +31,8 @@ class HomeViewModel @Inject constructor(
     private val _steamId = MutableStateFlow("")
     val steamId = _steamId.asStateFlow()
 
-    private val _showRetry = MutableStateFlow(false)
-    val showRetry = _showRetry.asStateFlow()
+    private val _loginFailed = MutableStateFlow(false)
+    val loginFailed = _loginFailed.asStateFlow()
 
     init {
         getUserNameFromDataStore()
@@ -55,13 +57,12 @@ class HomeViewModel @Inject constructor(
             onSuccess = { steamId ->
                 viewModelScope.launch {
                     _steamId.emit(steamId)
-
                     saveSteamIdToDataStore(steamId)
+                    _loginFailed.value = false
                 }
-                _showRetry.value = false
             },
             onFail = {
-                _showRetry.value = true
+                _loginFailed.value = true
             },
             loadingFinished = {
                 _loadingSteamId.value = false
@@ -71,12 +72,6 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun saveSteamIdToDataStore(steamId: String) {
         saveToDataStore(context, steamId, PreferencesKeys.STEAM_USER_ID_KEY)
-    }
-
-    fun retryLoadingSteamId() {
-        if (_userName.value.isNotEmpty()) {
-            loadSteamId(_userName.value)
-        }
     }
 
     fun saveUsernameToDataStorageAndGetSteamId(userName: String) {
@@ -93,6 +88,7 @@ class HomeViewModel @Inject constructor(
             _userName.value = ""
 
             saveToDataStore(context, "", PreferencesKeys.STEAM_USER_ID_KEY)
+            _steamId.value = ""
         }
     }
 }

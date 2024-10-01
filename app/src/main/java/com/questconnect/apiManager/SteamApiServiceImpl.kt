@@ -95,7 +95,6 @@ class SteamApiServiceImpl @Inject constructor() {
 
             override fun onFailure(t: Throwable?) {
                 Log.e(TAG, "API call failed", t)
-                Toast.makeText(context, "Can't resolve Steam ID: ${t?.message}", Toast.LENGTH_SHORT).show()
                 onFail()
                 loadingFinished()
             }
