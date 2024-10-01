@@ -9,11 +9,12 @@ import retrofit.http.Query
 interface SteamApiService {
 
     @GET("IPlayerService/GetOwnedGames/v0001/")
-     fun getOwnedGames(
+    fun getOwnedGames(
         @Query("key") apiKey: String,
         @Query("steamid") steamId: String,
         @Query("format") format: String = "json",
-        @Query("include_appinfo") includeAppInfo: Boolean = true
+        @Query("include_appinfo") includeAppInfo: Boolean = true,
+        @Query("appids_filter") appIdsFilter: String? = null
     ): Call<GameResponse>
         @GET("ISteamUser/ResolveVanityURL/v1/")
         fun getSteamIdFromVanityUrl(
@@ -28,4 +29,5 @@ interface SteamApiService {
         @Query("maxlength") maxLength: Int = 300,
         @Query("format") format: String = "json"
     ): Call<NewsResponse>
+
 }

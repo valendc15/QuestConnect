@@ -23,7 +23,8 @@ class SteamApiServiceImpl @Inject constructor() {
         onSuccess: (GameResponse) -> Unit,
         onFail: () -> Unit,
         loadingFinished: () -> Unit,
-        steamId: String
+        steamId: String,
+        appIdsFilter: String? = null
     ) {
 
         val retrofit: Retrofit = Retrofit.Builder()
@@ -32,11 +33,11 @@ class SteamApiServiceImpl @Inject constructor() {
             .build()
 
         val service: SteamApiService = retrofit.create(SteamApiService::class.java)
-        println("Este es el steamId: " + steamId)
 
         val call: Call<GameResponse> = service.getOwnedGames(
             apiKey = context.getString(R.string.steam_api_key),
-            steamId = steamId
+            steamId = steamId,
+            appIdsFilter = appIdsFilter
         )
 
         call.enqueue(object : Callback<GameResponse> {

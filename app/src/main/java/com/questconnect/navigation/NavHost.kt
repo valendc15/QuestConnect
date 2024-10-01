@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.questconnect.favorites.Favorites
 import com.questconnect.home.Home
 import com.questconnect.games.Games
 
@@ -25,6 +26,9 @@ fun NavHostComposable(innerPadding: PaddingValues, navController: NavHostControl
         }
         composable(route = QuestConnectScreen.Games.name ) {
             Games()
+        }
+        composable(route = QuestConnectScreen.Favorites.name){
+            Favorites()
         }
     }
 }

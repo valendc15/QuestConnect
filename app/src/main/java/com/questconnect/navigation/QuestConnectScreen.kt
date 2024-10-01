@@ -4,11 +4,11 @@ package com.questconnect.navigation
 enum class QuestConnectScreen {
     Home,
     Games,
-    Edit,
+    Favorites,
 }
 
 val basePages = listOf(
     QuestConnectScreen.Home.name,
     QuestConnectScreen.Games.name,
-    QuestConnectScreen.Edit.name
+    QuestConnectScreen.Favorites.name
 )

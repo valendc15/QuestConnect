@@ -3,9 +3,11 @@ package com.questconnect.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.outlined.Create
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.Icon
@@ -42,9 +44,9 @@ fun BottomBar(
         unselectedIcon = Icons.Outlined.Home
     )
     val settingsTab = TabBarItem(
-        title = QuestConnectScreen.Edit.name,
-        selectedIcon = Icons.Filled.Create,
-        unselectedIcon = Icons.Outlined.Create
+        title = QuestConnectScreen.Favorites.name,
+        selectedIcon = Icons.Default.Favorite,
+        unselectedIcon = Icons.Outlined.Favorite,
     )
     val moreTab = TabBarItem(
         title = QuestConnectScreen.Games.name,
