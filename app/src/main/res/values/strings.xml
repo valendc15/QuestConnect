@@ -21,5 +21,9 @@
     <string name="login_failed_help">Login Failed. Please check your username and try again. Make sure you have a customURL set up with your steam username</string>
     <string name="logout">Logout</string>
     <string name="welcome">Welcome, %s!</string>
+    <string name="search">Search</string>
+    <string name="favorite">Favorite</string>
+    <string name="add_game_favorite">Added game to favorites</string>
+    <string name="remove_game_favorite">Removed game from favorites</string>
 
 </resources>

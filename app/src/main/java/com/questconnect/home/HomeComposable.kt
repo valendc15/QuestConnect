@@ -27,12 +27,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.questconnect.R
 import com.questconnect.ui.theme.SteamBlue
 import com.questconnect.ui.theme.SteamLightBlue
+import com.questconnect.ui.theme.basicDimension
+import com.questconnect.ui.theme.bigDimension
+import com.questconnect.ui.theme.doubleBasicDimension
+import com.questconnect.ui.theme.mediumBigDimension
 import com.questconnect.ui.theme.mediumSmallText
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 
@@ -59,7 +65,7 @@ fun Home() {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(doubleBasicDimension),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -71,7 +77,7 @@ fun Home() {
 
                 Button(
                     onClick = { viewModel.resetUsernameAndSteamID() },
-                    modifier = Modifier.padding(top = 16.dp)
+                    modifier = Modifier.padding(doubleBasicDimension)
                 ) {
                     Text(stringResource(id = R.string.logout))
                 }
@@ -82,10 +88,11 @@ fun Home() {
 
 @Composable
 fun LoginScreen(
-    onLogin: (String) -> Unit,
-    isLoading: StateFlow<Boolean>,
-    isLoginFailed: StateFlow<Boolean>
-) {
+    onLogin: (String) -> Unit = {},
+    isLoading: StateFlow<Boolean> = MutableStateFlow(false),
+    isLoginFailed: StateFlow<Boolean> = MutableStateFlow(false)
+)
+ {
     val isLoadingValue by isLoading.collectAsState()
     val isLoginFailedValue by isLoginFailed.collectAsState()
     var steamUsername by remember { mutableStateOf("") }
@@ -94,14 +101,14 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(SteamBlue)
-            .padding(16.dp)
+            .padding(doubleBasicDimension)
     ) {
         when {
             isLoadingValue -> {
                 Box(modifier = Modifier.fillMaxSize()) {
                     LinearProgressIndicator(
                         modifier = Modifier
-                            .size(64.dp)
+                            .size(bigDimension)
                             .align(Alignment.Center),
                         color = SteamLightBlue,
                         trackColor = SteamBlue
@@ -120,7 +127,7 @@ fun LoginScreen(
                             text = stringResource(id = R.string.login_failed_help),
                             fontSize = mediumSmallText,
                             color = Color.White,
-                            modifier = Modifier.padding(bottom = 16.dp)
+                            modifier = Modifier.padding(bottom = doubleBasicDimension)
                         )
                     }
 
@@ -132,8 +139,8 @@ fun LoginScreen(
                             painter = painterResource(id = R.drawable.icons8_steam),
                             contentDescription = stringResource(id = R.string.steam_icon_descriptor),
                             modifier = Modifier
-                                .size(40.dp)
-                                .padding(end = 8.dp)
+                                .size(mediumBigDimension)
+                                .padding(end = basicDimension)
                         )
                         OutlinedTextField(
                             value = steamUsername,
@@ -151,7 +158,7 @@ fun LoginScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp)
+                            .padding(top = doubleBasicDimension)
                     ) {
                         Text(text = stringResource(id = R.string.login))
                     }
@@ -160,3 +167,12 @@ fun LoginScreen(
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewLoginScreen() {
+    LoginScreen()
+}
+
+
+

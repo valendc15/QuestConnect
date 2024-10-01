@@ -53,6 +53,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import com.questconnect.ui.theme.basicDimension
+import com.questconnect.ui.theme.bigDimension
+import com.questconnect.ui.theme.gridDimension
+import com.questconnect.ui.theme.halfBasicDimension
+import com.questconnect.ui.theme.mediumDimension
+import com.questconnect.ui.theme.minutesValue
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +84,7 @@ fun Games() {
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) { innerPadding ->
+    ) {innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,12 +97,13 @@ fun Games() {
                 onSearch = {},
                 active = false,
                 onActiveChange = { /* Handle active change */ },
-                placeholder = { Text("Search for games") },
+                placeholder = { Text(stringResource(id = R.string.search_games)) },
                 leadingIcon = {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                    Icon(imageVector = Icons.Default.Search, contentDescription = stringResource(id = R.string.search))
                 },
                 modifier = Modifier
-                    .fillMaxWidth().padding(bottom = 18.dp),
+                    .fillMaxWidth()
+                    .padding(bottom = mediumDimension),
                 content = {}
             )
             Box(
@@ -109,7 +116,7 @@ fun Games() {
                         Box(modifier = Modifier.fillMaxSize()) {
                             LinearProgressIndicator(
                                 modifier = Modifier
-                                    .size(64.dp)
+                                    .size(bigDimension)
                                     .align(Alignment.Center),
                                 color = SteamLightBlue,
                                 trackColor = SteamBlue
@@ -156,7 +163,7 @@ fun Games() {
                             }
                         } else {
                             LazyVerticalGrid(
-                                columns = GridCells.Adaptive(minSize = 150.dp),
+                                columns = GridCells.Adaptive(minSize = gridDimension),
                                 modifier = Modifier.fillMaxSize()
                             ) {
                                 items(filteredGames) { game: Game ->
@@ -180,13 +187,13 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
 
     Card(
         modifier = Modifier
-            .padding(4.dp)
+            .padding(halfBasicDimension)
             .fillMaxWidth()
             .aspectRatio(2f / 3f)
             .clickable { isExpanded = !isExpanded },
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        shape = RoundedCornerShape(8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
+        shape = RoundedCornerShape(basicDimension),
+        elevation = CardDefaults.cardElevation(halfBasicDimension)
     ) {
         Box {
             val imageUrl = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/library_600x900.jpg"
@@ -208,10 +215,10 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
 
             Icon(
                 imageVector = if (isFav) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                contentDescription = "Favorite",
+                contentDescription = stringResource(id = R.string.favorite),
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(8.dp)
+                    .padding(basicDimension)
                     .clickable {
                         viewModel.toggleFavoriteGame(game)
                     },
@@ -226,8 +233,9 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(8.dp))
-                        .padding(8.dp),
+                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(
+                            basicDimension))
+                        .padding(basicDimension),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(
@@ -240,9 +248,9 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
                             color = Color.White,
                             fontSize = mediumText
                         )
-                        Spacer(modifier = Modifier.height(4.dp))
+                        Spacer(modifier = Modifier.height(halfBasicDimension))
                         Text(
-                            text = stringResource(id = R.string.total_playtime, (game.playtime_forever / 60).toString()),
+                            text = stringResource(id = R.string.total_playtime, (game.playtime_forever / minutesValue).toString()),
                             color = Color.LightGray,
                             fontSize = mediumSmallText
                         )
