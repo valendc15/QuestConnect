@@ -6,7 +6,7 @@
     <string name= "menu_item_two">Elemento dos del menú</string>
     <string name= "close_icon_descriptor">Cerrar icono</string>
     <string name="steam_icon_descriptor">Icono de vapor</string>
-    <string name="steam_api_key">657246B1D843A1740F4A71BCD1CEAE55</string>
+    <string name="steam_api_key">ficticio</string>
     <string name="steam_user_id">76561198328603557</string>
     <string name= "json">json</string>
     <string name= "retry">Rever</string>
@@ -30,5 +30,14 @@
     <string name="no_url_available">No hay URL disponible</string>
     <string name= "not_sign_in_steam_favs">No has iniciado sesión con tu cuenta de Steam, por lo que no podrás ver tus favoritos</string>
     <string name= "not_sign_in_steam_games">No has iniciado sesión con tu cuenta de Steam, por lo que no podrás ver tus juegos.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="login_biometrics">Inicie sesión con sus credenciales biométricas</string>
+    <string name="biometric_authentication">Autenticación biométrica</string>
+    <string name="biometric_error_no_hardware">Este teléfono no está preparado para funciones biométricas.</string>
+    <string name="biometric_error_hw_not_available">La autenticación biométrica no está disponible</string>
+    <string name="biometric_error_security_update_required">No puede utilizar la autenticación biométrica hasta que haya actualizado sus datos de seguridad</string>
+    <string name="biometric_error_unsuported">No puedes usar la autenticación biométrica con esta versión de Android</string>
+    <string name="biometric_error_other">No puedes usar autenticación biométrica</string>
+
 
 </resources>

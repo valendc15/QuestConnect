@@ -6,7 +6,7 @@
     <string name= "menu_item_two">Menu item two</string>
     <string name= "close_icon_descriptor">Close icon</string>
     <string name="steam_icon_descriptor">Steam Icon</string>
-    <string name="steam_api_key">657246B1D843A1740F4A71BCD1CEAE55</string>
+    <string name="steam_api_key">dummy</string>
     <string name="steam_user_id">76561198328603557</string>
     <string name= "json">json</string>
     <string name= "retry">Retry</string>
@@ -30,5 +30,14 @@
     <string name="no_url_available">No URL available</string>
     <string name= "not_sign_in_steam_favs">You have not signed in with your Steam account so you wont be able to see your favorites</string>
     <string name= "not_sign_in_steam_games">You have not signed in with your Steam account so you wont be able to see your games</string>
+    <string name="cancel">Cancel</string>
+    <string name="login_biometrics">Login using your Biometric credentials</string>
+    <string name="biometric_authentication">Biometric Authentication</string>
+    <string name="biometric_error_no_hardware">This phone is not prepared for biometric features</string>
+    <string name="biometric_error_hw_not_available">Biometric auth is unavailable</string>
+    <string name="biometric_error_security_update_required">You can\'t use biometric auth until you have updated your security details</string>
+    <string name="biometric_error_unsuported">You can\'t use biometric auth with this Android version</string>
+    <string name="biometric_error_other">You can\'t use biometric auth</string>
+
 
 </resources>

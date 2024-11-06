@@ -79,4 +79,5 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     kapt(libs.hilt.compiler)
     kapt(libs.androidx.room.compiler)
+    implementation(libs.biometrics)
 }
