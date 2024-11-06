@@ -41,6 +41,9 @@ class FavoritesViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
+    private val _isSteamIdAvailable = MutableStateFlow(false)
+    val isSteamIdAvailable: StateFlow<Boolean> = _isSteamIdAvailable.asStateFlow()
+
     fun clearSnackbar() {
         _snackbarMessage.value = null
     }
@@ -53,6 +56,7 @@ class FavoritesViewModel @Inject constructor(
         viewModelScope.launch {
             getFromDataStore(context, PreferencesKeys.STEAM_USER_ID_KEY).collect { id ->
                 steamId = id ?: ""
+                _isSteamIdAvailable.value = steamId.isNotEmpty()
                 observeFavoriteGames()
             }
         }

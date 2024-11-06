@@ -44,18 +44,30 @@ import com.questconnect.ui.theme.halfBasicDimension
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import com.questconnect.ui.theme.SteamLighGray
+import com.questconnect.ui.theme.bigDimension
+import com.questconnect.utils.SteamNotAvailable
 
 @Composable
 fun Favorites() {
     val viewModel = hiltViewModel<FavoritesViewModel>()
     val favoriteGames = viewModel.favoriteGames.collectAsState(initial = emptyList())
     val isLoading = viewModel.isLoading.collectAsState(initial = false)
-
+    val isSteamIdAvailable = viewModel.isSteamIdAvailable.collectAsState()
     var showNewsModal by remember { mutableStateOf(false) }
+    
+    if (!isSteamIdAvailable.value) {
+       SteamNotAvailable(R.string.not_sign_in_steam_favs)
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn() {
@@ -91,7 +103,6 @@ fun GameItem(game: Game, onClick: () -> Unit) {
         Text(text = game.name, fontSize = mediumText)
     }
 }
-
 
 @Composable
 fun NewsModal(

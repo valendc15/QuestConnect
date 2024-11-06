@@ -45,6 +45,9 @@ class GamesViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
+    private val _isSteamIdAvailable = MutableStateFlow(false)
+    val isSteamIdAvailable: StateFlow<Boolean> = _isSteamIdAvailable.asStateFlow()
+
     fun clearSnackbar() {
         _snackbarMessage.value = null
     }
@@ -62,6 +65,7 @@ class GamesViewModel @Inject constructor(
         viewModelScope.launch {
             getFromDataStore(context, PreferencesKeys.STEAM_USER_ID_KEY).collect { id ->
                 steamId = id ?: ""
+                _isSteamIdAvailable.value = steamId.isNotEmpty()
                 loadGames()
             }
         }

@@ -28,5 +28,7 @@
     <string name="latest_news">Últimas noticias</string>
     <string name="no_news">Sin noticias</string>
     <string name="no_url_available">No hay URL disponible</string>
+    <string name= "not_sign_in_steam_favs">No has iniciado sesión con tu cuenta de Steam, por lo que no podrás ver tus favoritos</string>
+    <string name= "not_sign_in_steam_games">No has iniciado sesión con tu cuenta de Steam, por lo que no podrás ver tus juegos.</string>
 
 </resources>

@@ -28,5 +28,7 @@
     <string name="latest_news">Latest News</string>
     <string name="no_news">No news</string>
     <string name="no_url_available">No URL available</string>
+    <string name= "not_sign_in_steam_favs">You have not signed in with your Steam account so you wont be able to see your favorites</string>
+    <string name= "not_sign_in_steam_games">You have not signed in with your Steam account so you wont be able to see your games</string>
 
 </resources>

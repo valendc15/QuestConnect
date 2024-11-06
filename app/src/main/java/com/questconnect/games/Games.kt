@@ -59,32 +59,30 @@ import com.questconnect.ui.theme.gridDimension
 import com.questconnect.ui.theme.halfBasicDimension
 import com.questconnect.ui.theme.mediumDimension
 import com.questconnect.ui.theme.minutesValue
-import kotlinx.coroutines.launch
+import com.questconnect.utils.SteamNotAvailable
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Games() {
     val viewModel = hiltViewModel<GamesViewModel>()
+    val isSteamIdAvailable = viewModel.isSteamIdAvailable.collectAsState()
+    
+    if (!isSteamIdAvailable.value){
+        SteamNotAvailable(stringId = R.string.not_sign_in_steam_games)
+    }
+    else {
+        GamesLibrary(viewModel = viewModel)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun GamesLibrary(viewModel: GamesViewModel){
     val games = viewModel.games.collectAsState()
     val loadingGames = viewModel.loadingGames.collectAsState()
     val showRetry = viewModel.showRetry.collectAsState()
-    val snackbarMessage by viewModel.snackbarMessage.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     val searchQuery = viewModel.searchQuery.collectAsState()
-
-    LaunchedEffect(snackbarMessage) {
-        snackbarMessage?.let {
-            coroutineScope.launch {
-                snackbarHostState.showSnackbar(it)
-                viewModel.clearSnackbar()
-            }
-        }
-    }
-
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -99,7 +97,10 @@ fun Games() {
                 onActiveChange = { /* Handle active change */ },
                 placeholder = { Text(stringResource(id = R.string.search_games)) },
                 leadingIcon = {
-                    Icon(imageVector = Icons.Default.Search, contentDescription = stringResource(id = R.string.search))
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = stringResource(id = R.string.search)
+                    )
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -123,10 +124,14 @@ fun Games() {
                             )
                         }
                     }
+
                     showRetry.value -> {
                         Column(
                             modifier = Modifier.align(Alignment.Center),
-                            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+                            verticalArrangement = Arrangement.spacedBy(
+                                20.dp,
+                                Alignment.CenterVertically
+                            ),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
@@ -144,6 +149,7 @@ fun Games() {
                             }
                         }
                     }
+
                     else -> {
                         val filteredGames = games.value.filter {
                             it.name.contains(searchQuery.value, ignoreCase = true)
@@ -233,8 +239,11 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.5f), RoundedCornerShape(
-                            basicDimension))
+                        .background(
+                            Color.Black.copy(alpha = 0.5f), RoundedCornerShape(
+                                basicDimension
+                            )
+                        )
                         .padding(basicDimension),
                     contentAlignment = Alignment.Center
                 ) {
