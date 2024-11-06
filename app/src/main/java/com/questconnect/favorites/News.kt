@@ -1,5 +1,6 @@
 package com.questconnect.favorites
 
+import android.webkit.WebView
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,6 @@ import com.questconnect.games.Game
 import com.questconnect.ui.theme.basicDimension
 import com.questconnect.ui.theme.doubleBasicDimension
 import com.questconnect.ui.theme.largeText
-import com.questconnect.ui.theme.mediumSmallText
 import com.questconnect.ui.theme.mediumText
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,26 +37,31 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import com.questconnect.R
 import com.questconnect.ui.theme.SteamMain
 import com.questconnect.ui.theme.halfBasicDimension
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.platform.LocalContext
+import com.questconnect.ui.theme.SteamLighGray
 
 @Composable
 fun Favorites() {
     val viewModel = hiltViewModel<FavoritesViewModel>()
     val favoriteGames = viewModel.favoriteGames.collectAsState(initial = emptyList())
-    val gameNews = viewModel.gameNews.collectAsState(initial = emptyList())
     val isLoading = viewModel.isLoading.collectAsState(initial = false)
 
     var showNewsModal by remember { mutableStateOf(false) }
-    var selectedGameNews by remember { mutableStateOf<List<NewsItem>>(emptyList()) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn() {
             items(favoriteGames.value) { game ->
                 GameItem(game, onClick = {
                     viewModel.fetchGameNews(game.appid.toLong())
-                    selectedGameNews = gameNews.value
                     showNewsModal = true
                 })
                 Divider(color = Color.LightGray, thickness = 1.dp)
@@ -68,7 +73,7 @@ fun Favorites() {
         }
 
         if (showNewsModal && !isLoading.value) {
-            NewsModal(newsItems = selectedGameNews, onDismiss = { showNewsModal = false })
+            NewsModal( onDismiss = { showNewsModal = false }, viewModel)
         }
     }
 }
@@ -87,23 +92,66 @@ fun GameItem(game: Game, onClick: () -> Unit) {
     }
 }
 
+
 @Composable
-fun NewsModal(newsItems: List<NewsItem>, onDismiss: () -> Unit) {
+fun NewsModal(
+    onDismiss: () -> Unit,
+    viewModel: FavoritesViewModel
+) {
+    val gameNews = viewModel.gameNews.collectAsState(initial = emptyList())
+    val context = LocalContext.current
+
+    if (gameNews.value.isNotEmpty()){
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(text = stringResource(id = R.string.latest_news), fontSize = largeText) },
+        title = {
+            Text(text = stringResource(id = R.string.latest_news), fontSize = largeText)
+        },
         text = {
-            Column {
-                newsItems.forEach { news ->
-                    Text(text = news.title, fontSize = mediumText)
-                    Spacer(modifier = Modifier.height(halfBasicDimension))
-                    if (news.contents.isEmpty()){
-                        Text(text = stringResource(id = R.string.no_news))
+            Column (modifier = Modifier.verticalScroll(rememberScrollState())) {
+                gameNews.value.forEach { news ->
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                if (news.url.isNotEmpty()) {
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(news.url))
+                                    context.startActivity(intent)
+                                } else {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            R.string.no_url_available,
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                            }
+                            .padding(doubleBasicDimension)
+                    ) {
+                        Text(text = news.title, fontSize = mediumText)
+                        Spacer(modifier = Modifier.height(halfBasicDimension))
+
+                        if (news.contents.isEmpty()) {
+                            Text(text = stringResource(id = R.string.no_news))
+                        } else {
+                            val sanitizedHtml = removeImageTags(news.contents)
+                            AndroidView(
+                                factory = { webViewContext ->
+                                    WebView(webViewContext).apply {
+                                        settings.javaScriptEnabled = false
+                                        loadDataWithBaseURL(null, sanitizedHtml, "text/html", "utf-8", null)
+                                    }
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(basicDimension))
                     }
-                    else {
-                        Text(text = news.contents, fontSize = mediumSmallText)
-                    }
-                    Spacer(modifier = Modifier.height(basicDimension))
                 }
             }
         },
@@ -113,4 +161,4 @@ fun NewsModal(newsItems: List<NewsItem>, onDismiss: () -> Unit) {
             }
         }
     )
-}
+}}

@@ -6,8 +6,7 @@
     <string name= "menu_item_two">Menu item two</string>
     <string name= "close_icon_descriptor">Close icon</string>
     <string name="steam_icon_descriptor">Steam Icon</string>
-    <string name="steam_api_url">http://api.steampowered.com/</string>
-    <string name="steam_api_key">dummy</string>
+    <string name="steam_api_key">657246B1D843A1740F4A71BCD1CEAE55</string>
     <string name="steam_user_id">76561198328603557</string>
     <string name= "json">json</string>
     <string name= "retry">Retry</string>
@@ -28,5 +27,6 @@
     <string name="close">Close</string>
     <string name="latest_news">Latest News</string>
     <string name="no_news">No news</string>
+    <string name="no_url_available">No URL available</string>
 
 </resources>

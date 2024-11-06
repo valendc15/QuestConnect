@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">QuestConnect</string>
+    <string name="ok" >DE ACUERDO</string>
+    <string name="menu_icon_descriptor">Icono de menú</string>
+    <string name="menu_item_one">Elemento del menú uno</string>
+    <string name= "menu_item_two">Elemento dos del menú</string>
+    <string name= "close_icon_descriptor">Cerrar icono</string>
+    <string name="steam_icon_descriptor">Icono de vapor</string>
+    <string name="steam_api_key">657246B1D843A1740F4A71BCD1CEAE55</string>
+    <string name="steam_user_id">76561198328603557</string>
+    <string name= "json">json</string>
+    <string name= "retry">Rever</string>
+    <string name= "retry_games">Se produjo un error al recuperar tus juegos. Vuelve a intentarlo.</string>
+    <string name="login">Acceso</string>
+    <string name="steam_username">Nombre de usuario de Steam</string>
+    <string name="total_playtime">Tiempo de juego %s horas</string>
+    <string name="search_games">Buscar juegos de Steam</string>
+    <string name="no_games_found">No se encontraron juegos</string>
+    <string name="tooltip_description">Esta es una información sobre herramientas</string>
+    <string name="login_failed_help">Error de inicio de sesion. Por favor verifique su nombre de usuario e inténtelo nuevamente. Asegúrate de tener una URL personalizada configurada con tu nombre de usuario de Steam.</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="welcome">¡Bienvenido, %s!</string>
+    <string name="search">Buscar</string>
+    <string name="favorite">Favorito</string>
+    <string name="add_game_favorite">Juego añadido a favoritos.</string>
+    <string name="remove_game_favorite">Juego eliminado de favoritos.</string>
+    <string name="close">Cerca</string>
+    <string name="latest_news">Últimas noticias</string>
+    <string name="no_news">Sin noticias</string>
+    <string name="no_url_available">No hay URL disponible</string>
+
+</resources>
