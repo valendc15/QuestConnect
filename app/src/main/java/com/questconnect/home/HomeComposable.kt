@@ -137,7 +137,7 @@ fun LoginScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.icons8_steam),
                             contentDescription = stringResource(id = R.string.steam_icon_descriptor),
-                            tint = MaterialTheme.colorScheme.primary,
+                            tint = MaterialTheme.colorScheme.onPrimary,
                             modifier = Modifier
                                 .size(mediumBigDimension)
                                 .padding(end = basicDimension)
@@ -148,10 +148,12 @@ fun LoginScreen(
                             label = { Text(stringResource(id = R.string.steam_username)) },
                             modifier = Modifier.fillMaxWidth(),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedTextColor = MaterialTheme.colorScheme.onBackground,
-                                cursorColor = MaterialTheme.colorScheme.primary,
-                                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                                unfocusedBorderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                                focusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                                cursorColor = MaterialTheme.colorScheme.onPrimary,
+                                focusedBorderColor = MaterialTheme.colorScheme.onPrimary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.5f),
+                                unfocusedTextColor = MaterialTheme.colorScheme.onPrimary,
+                                focusedLabelColor = MaterialTheme.colorScheme.onPrimary
                             )
                         )
                     }
