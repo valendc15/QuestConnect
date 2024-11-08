@@ -44,6 +44,9 @@ class FavoritesViewModel @Inject constructor(
     private val _isSteamIdAvailable = MutableStateFlow(false)
     val isSteamIdAvailable: StateFlow<Boolean> = _isSteamIdAvailable.asStateFlow()
 
+    private val _isLoadingFavs = MutableStateFlow(false)
+    val isLoadingFavs: StateFlow<Boolean> = _isLoadingFavs.asStateFlow()
+
     fun clearSnackbar() {
         _snackbarMessage.value = null
     }
@@ -76,6 +79,7 @@ class FavoritesViewModel @Inject constructor(
     }
 
     private fun loadFavoriteGames(appIds: List<Long>) {
+        _isLoadingFavs.value = true
         if (appIds.isNotEmpty()) {
             apiServiceImpl.getOwnedGames(
                 context = context,
@@ -90,6 +94,7 @@ class FavoritesViewModel @Inject constructor(
                         }
 
                         _favoriteGames.emit(updatedGamesList)
+                        _isLoadingFavs.value=false
                     }
                 },
                 onFail = {

@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -31,8 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.questconnect.R
-import com.questconnect.ui.theme.SteamBlue
-import com.questconnect.ui.theme.SteamLightBlue
 import com.questconnect.ui.theme.basicDimension
 import com.questconnect.ui.theme.bigDimension
 import com.questconnect.ui.theme.doubleBasicDimension
@@ -57,10 +58,9 @@ fun Home() {
             isLoginFailed = viewModel.loginFailed
         )
     } else {
-
         Surface(
             modifier = Modifier.fillMaxSize(),
-            color = SteamBlue
+            color = MaterialTheme.colorScheme.background
         ) {
             Column(
                 modifier = Modifier
@@ -77,7 +77,7 @@ fun Home() {
 
                 Button(
                     onClick = { viewModel.resetUsernameAndSteamID() },
-                    modifier = Modifier.padding(doubleBasicDimension)
+                    modifier = Modifier.padding(doubleBasicDimension),
                 ) {
                     Text(stringResource(id = R.string.logout))
                 }
@@ -86,13 +86,13 @@ fun Home() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     onLogin: (String) -> Unit = {},
     isLoading: StateFlow<Boolean> = MutableStateFlow(false),
     isLoginFailed: StateFlow<Boolean> = MutableStateFlow(false)
-)
- {
+) {
     val isLoadingValue by isLoading.collectAsState()
     val isLoginFailedValue by isLoginFailed.collectAsState()
     var steamUsername by remember { mutableStateOf("") }
@@ -100,7 +100,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(SteamBlue)
+            .background(MaterialTheme.colorScheme.background)
             .padding(doubleBasicDimension)
     ) {
         when {
@@ -110,8 +110,8 @@ fun LoginScreen(
                         modifier = Modifier
                             .size(bigDimension)
                             .align(Alignment.Center),
-                        color = SteamLightBlue,
-                        trackColor = SteamBlue
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.background
                     )
                 }
             }
@@ -121,12 +121,11 @@ fun LoginScreen(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     if (isLoginFailedValue) {
                         Text(
                             text = stringResource(id = R.string.login_failed_help),
                             fontSize = mediumSmallText,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.padding(bottom = doubleBasicDimension)
                         )
                     }
@@ -138,6 +137,7 @@ fun LoginScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.icons8_steam),
                             contentDescription = stringResource(id = R.string.steam_icon_descriptor),
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
                                 .size(mediumBigDimension)
                                 .padding(end = basicDimension)
@@ -146,7 +146,13 @@ fun LoginScreen(
                             value = steamUsername,
                             onValueChange = { steamUsername = it },
                             label = { Text(stringResource(id = R.string.steam_username)) },
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                                cursorColor = MaterialTheme.colorScheme.primary,
+                                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                                unfocusedBorderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                            )
                         )
                     }
 

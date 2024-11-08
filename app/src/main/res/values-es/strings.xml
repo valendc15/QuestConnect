@@ -5,9 +5,11 @@
     <string name="menu_item_one">Elemento del menú uno</string>
     <string name= "menu_item_two">Elemento dos del menú</string>
     <string name= "close_icon_descriptor">Cerrar icono</string>
+    <string name="home">Hogar</string>
+    <string name="games">Juegos</string>
+    <string name="favorites">Favoritos</string>
     <string name="steam_icon_descriptor">Icono de vapor</string>
-    <string name="steam_api_key">ficticio</string>
-    <string name="steam_user_id">76561198328603557</string>
+    <string name="steam_api_key">dummy</string>
     <string name= "json">json</string>
     <string name= "retry">Rever</string>
     <string name= "retry_games">Se produjo un error al recuperar tus juegos. Vuelve a intentarlo.</string>
@@ -24,7 +26,7 @@
     <string name="favorite">Favorito</string>
     <string name="add_game_favorite">Juego añadido a favoritos.</string>
     <string name="remove_game_favorite">Juego eliminado de favoritos.</string>
-    <string name="close">Cerca</string>
+    <string name="close">Cerrar</string>
     <string name="latest_news">Últimas noticias</string>
     <string name="no_news">Sin noticias</string>
     <string name="no_url_available">No hay URL disponible</string>

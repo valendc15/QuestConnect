@@ -17,42 +17,41 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.questconnect.ui.theme.SteamMain
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(onMenuClick: () -> Unit) {
-    TopAppBar(
-        title = {
-            Text(
-                text = "Quest Connect",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.White
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = onMenuClick) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Menu",
-                    tint = Color.White
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = SteamMain,
-            titleContentColor = Color.White,
-            navigationIconContentColor = Color.White
-        )
-    )
-}
-@Composable
-fun DrawerContent(onDestinationClicked: (route: String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxSize()
-    ) {
-        Text(QuestConnectScreen.Home.name, modifier = Modifier.clickable { onDestinationClicked("home") })
-    }
-}
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun TopBar(onMenuClick: () -> Unit) {
+//    TopAppBar(
+//        title = {
+//            Text(
+//                text = "Quest Connect",
+//                style = MaterialTheme.typography.labelSmall,
+//                color = Color.White
+//            )
+//        },
+//        navigationIcon = {
+//            IconButton(onClick = onMenuClick) {
+//                Icon(
+//                    imageVector = Icons.Filled.Menu,
+//                    contentDescription = "Menu",
+//                    tint = Color.White
+//                )
+//            }
+//        },
+//        colors = TopAppBarDefaults.topAppBarColors(
+//            containerColor = SteamMain,
+//            titleContentColor = Color.White,
+//            navigationIconContentColor = Color.White
+//        )
+//    )
+//}
+//@Composable
+//fun DrawerContent(onDestinationClicked: (route: String) -> Unit) {
+//    Column(
+//        modifier = Modifier
+//            .padding(16.dp)
+//            .fillMaxSize()
+//    ) {
+//        Text(QuestConnectScreen.Home.name, modifier = Modifier.clickable { onDestinationClicked("home") })
+//    }
+//}

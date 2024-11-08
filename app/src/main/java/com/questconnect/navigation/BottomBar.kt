@@ -2,11 +2,9 @@ package com.questconnect.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
@@ -23,14 +21,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.questconnect.ui.theme.SteamLighGray
-import com.questconnect.ui.theme.SteamMain
+import com.questconnect.R
 
 data class TabBarItem(
     val title: String,
     val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
+    val unselectedIcon: ImageVector,
+    val text: String
 )
 
 @Composable
@@ -39,19 +38,22 @@ fun BottomBar(
 ) {
 
     val homeTab = TabBarItem(
-        title = QuestConnectScreen.Home.name,
+    title = QuestConnectScreen.Home.name,
         selectedIcon = Icons.Filled.Home,
-        unselectedIcon = Icons.Outlined.Home
+        unselectedIcon = Icons.Outlined.Home,
+        text = stringResource(id = R.string.home)
     )
     val settingsTab = TabBarItem(
         title = QuestConnectScreen.Favorites.name,
         selectedIcon = Icons.Default.Favorite,
         unselectedIcon = Icons.Outlined.Favorite,
+        text = stringResource(id = R.string.favorites)
     )
     val moreTab = TabBarItem(
         title = QuestConnectScreen.Games.name,
         selectedIcon = Icons.Filled.List,
-        unselectedIcon = Icons.Outlined.List
+        unselectedIcon = Icons.Outlined.List,
+                text = stringResource(id = R.string.games)
     )
 
     val tabBarItems = listOf(homeTab, settingsTab, moreTab)
@@ -61,17 +63,19 @@ fun BottomBar(
 
 @Composable
 fun TabView(tabBarItems: List<TabBarItem>, onNavigate: (String) -> Unit) {
-    var selectedTabIndex by rememberSaveable {
-        mutableIntStateOf(0)
-    }
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     NavigationBar(
-        containerColor = SteamMain,
-        contentColor = Color.White,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.onPrimary,
     ) {
         tabBarItems.forEachIndexed { index, tabBarItem ->
             val isSelected = selectedTabIndex == index
-            val itemColor = if (isSelected) Color.White else SteamLighGray
+            val itemColor = if (isSelected) {
+                MaterialTheme.colorScheme.onPrimary
+            } else {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            }
 
             NavigationBarItem(
                 selected = isSelected,
@@ -84,13 +88,13 @@ fun TabView(tabBarItems: List<TabBarItem>, onNavigate: (String) -> Unit) {
                         isSelected = isSelected,
                         selectedIcon = tabBarItem.selectedIcon,
                         unselectedIcon = tabBarItem.unselectedIcon,
-                        title = tabBarItem.title,
+                        title = tabBarItem.text,
                         iconColor = itemColor
                     )
                 },
                 label = {
                     Text(
-                        text = tabBarItem.title,
+                        text = tabBarItem.text,
                         style = MaterialTheme.typography.labelSmall,
                         color = itemColor,
                         modifier = Modifier.padding(top = 4.dp)

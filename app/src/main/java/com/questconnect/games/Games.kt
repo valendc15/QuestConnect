@@ -22,6 +22,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -41,18 +42,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.questconnect.R
-import com.questconnect.ui.theme.SteamBlue
-import com.questconnect.ui.theme.SteamLightBlue
 import com.questconnect.ui.theme.largeText
 import com.questconnect.ui.theme.mediumSmallText
 import com.questconnect.ui.theme.mediumText
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.SearchBarDefaults
 import com.questconnect.ui.theme.basicDimension
 import com.questconnect.ui.theme.bigDimension
 import com.questconnect.ui.theme.gridDimension
@@ -76,20 +72,21 @@ fun Games() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GamesLibrary(viewModel: GamesViewModel){
+fun GamesLibrary(viewModel: GamesViewModel) {
     val games = viewModel.games.collectAsState()
     val loadingGames = viewModel.loadingGames.collectAsState()
     val showRetry = viewModel.showRetry.collectAsState()
     val searchQuery = viewModel.searchQuery.collectAsState()
-    Scaffold(
-    ) { innerPadding ->
+
+    Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(SteamBlue)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(8.dp)
         ) {
             SearchBar(
+                colors = SearchBarDefaults.colors(containerColor = MaterialTheme.colorScheme.primary),
                 query = searchQuery.value,
                 onQueryChange = { viewModel.onSearchQueryChanged(it) },
                 onSearch = {},
@@ -110,7 +107,7 @@ fun GamesLibrary(viewModel: GamesViewModel){
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(SteamBlue)
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 when {
                     loadingGames.value -> {
@@ -119,8 +116,8 @@ fun GamesLibrary(viewModel: GamesViewModel){
                                 modifier = Modifier
                                     .size(bigDimension)
                                     .align(Alignment.Center),
-                                color = SteamLightBlue,
-                                trackColor = SteamBlue
+                                color = MaterialTheme.colorScheme.primary,
+                                trackColor = MaterialTheme.colorScheme.background
                             )
                         }
                     }
@@ -128,21 +125,18 @@ fun GamesLibrary(viewModel: GamesViewModel){
                     showRetry.value -> {
                         Column(
                             modifier = Modifier.align(Alignment.Center),
-                            verticalArrangement = Arrangement.spacedBy(
-                                20.dp,
-                                Alignment.CenterVertically
-                            ),
+                            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
                                 text = stringResource(id = R.string.retry),
                                 fontSize = largeText,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                             Text(
                                 text = stringResource(id = R.string.retry_games),
-                                color = Color.White
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                             Button(onClick = { viewModel.retryLoadingGames() }) {
                                 Text(text = stringResource(id = R.string.retry))
@@ -162,7 +156,7 @@ fun GamesLibrary(viewModel: GamesViewModel){
                             ) {
                                 Text(
                                     text = stringResource(id = R.string.no_games_found),
-                                    color = Color.White,
+                                    color = MaterialTheme.colorScheme.onBackground,
                                     fontWeight = FontWeight.Bold,
                                     fontSize = largeText
                                 )
@@ -197,12 +191,12 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
             .fillMaxWidth()
             .aspectRatio(2f / 3f)
             .clickable { isExpanded = !isExpanded },
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(basicDimension),
         elevation = CardDefaults.cardElevation(halfBasicDimension)
     ) {
         Box {
-            val imageUrl = "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/${game.appid}/library_600x900.jpg"
+            val imageUrl = stringResource(id = R.string.steam_image_url, game.appid)
             val painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current)
                     .data(data = imageUrl)
@@ -225,10 +219,8 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(basicDimension)
-                    .clickable {
-                        viewModel.toggleFavoriteGame(game)
-                    },
-                tint = Color.Red
+                    .clickable { viewModel.toggleFavoriteGame(game) },
+                tint = MaterialTheme.colorScheme.tertiary
             )
 
             androidx.compose.animation.AnimatedVisibility(
@@ -240,9 +232,8 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            Color.Black.copy(alpha = 0.5f), RoundedCornerShape(
-                                basicDimension
-                            )
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+                            RoundedCornerShape(basicDimension)
                         )
                         .padding(basicDimension),
                     contentAlignment = Alignment.Center
@@ -254,13 +245,13 @@ fun GameView(game: Game, viewModel: GamesViewModel) {
                         Text(
                             text = game.name,
                             fontWeight = FontWeight.Bold,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onSurface,
                             fontSize = mediumText
                         )
                         Spacer(modifier = Modifier.height(halfBasicDimension))
                         Text(
                             text = stringResource(id = R.string.total_playtime, (game.playtime_forever / minutesValue).toString()),
-                            color = Color.LightGray,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                             fontSize = mediumSmallText
                         )
                     }

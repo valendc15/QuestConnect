@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="steam_api_url" translatable="false">http://api.steampowered.com/</string>
+    <string name="steam_image_url" translatable="false">"https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/%s/library_600x900.jpg"</string>
 </resources>

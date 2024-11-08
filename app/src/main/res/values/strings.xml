@@ -5,9 +5,11 @@
     <string name="menu_item_one">Menu item one</string>
     <string name= "menu_item_two">Menu item two</string>
     <string name= "close_icon_descriptor">Close icon</string>
+    <string name="home">Home</string>
+    <string name="games">Games</string>
+    <string name="favorites">Favorites</string>
     <string name="steam_icon_descriptor">Steam Icon</string>
     <string name="steam_api_key">dummy</string>
-    <string name="steam_user_id">76561198328603557</string>
     <string name= "json">json</string>
     <string name= "retry">Retry</string>
     <string name= "retry_games">An error occurred while fetching your games, please retry </string>

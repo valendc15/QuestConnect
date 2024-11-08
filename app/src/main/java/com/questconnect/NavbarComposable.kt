@@ -40,13 +40,13 @@ fun Navbar() {
         ),
         NavbarButton(
             leadingIcon = Icons.Default.Home,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.primary,
             onClick = { /* Handle click */ },
             centerButton = false
         ),
         NavbarButton(
             leadingIcon = Icons.Default.CheckCircle,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.primary,
             onClick = { /* Handle click */ },
             centerButton = false
         ),
